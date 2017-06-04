@@ -13,7 +13,7 @@ from pylons import app_globals as g
 
 from r2.lib import amqp
 from r2.lib.db import tdb_cassandra
-from r2.lib.media import MediaEmbed, Scraper, get_media_embed, _OEmbedScraper
+from r2.lib.media import MediaEmbed, Scraper, get_media_embed, _EmbedlyScraper
 from r2.lib.utils import sanitize_url, TimeoutFunction, TimeoutFunctionException
 
 from reddit_liveupdate import pages
@@ -147,7 +147,7 @@ class LiveScraper(Scraper):
         return _EmbedlyCardFallbackScraper(url, scraper)
 
 # mostly lifted from the EmbedlyScraper in r2
-class _LiveEmbedlyScraper(_OEmbedScraper):
+class _LiveEmbedlyScraper(_EmbedlyScraper):
     OEMBED_ENDPOINT = "https://api.embed.ly/1/oembed"
 
     @classmethod
