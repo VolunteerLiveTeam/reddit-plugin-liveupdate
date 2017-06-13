@@ -494,6 +494,9 @@ class LiveUpdateOtherDiscussions(Templated):
             if not getattr(w, "allow_liveupdate", True):
                 continue
 
+            if link._score < g.liveupdate_min_score_for_discussions:
+                continue
+
             w.subreddit = subreddits[link.sr_id]
 
             # ideally we'd check if the user can see the subreddit, but by
@@ -561,13 +564,24 @@ class LiveUpdateNSFWEmbed(Templated):
 
 
 class LiveUpdateHappeningNowBar(Templated):
-    def __init__(self, event):
+    def __init__(self, event, enable_logo=True):
         self.event = event
+        self.enable_logo = enable_logo
         Templated.__init__(self)
 
 
 class HappeningNowAdmin(Templated):
     """Admin page for choosing the promoted reddit live thread."""
 
-    def __init__(self, current_thread):
-        super(HappeningNowAdmin, self).__init__(current_thread=current_thread)
+    def __init__(self, featured_events):
+        if featured_events:
+            target, event = featured_events.items()[0]
+            super(HappeningNowAdmin, self).__init__(
+                featured_event=LiveUpdateHappeningNowBar(event, enable_logo=False),
+                target=target,
+            )
+        else:
+            super(HappeningNowAdmin, self).__init__(
+                featured_event=None,
+                target=None,
+            )
